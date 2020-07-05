@@ -150,6 +150,7 @@ $(document).ready(function () {
     }).then(function (data) {
       console.log(data);
       console.log(data.data.length);
+      $(".spinner").addClass("hide");
       var totalParks = $("<h3>").prependTo("#resultsIntro");
       totalParks
         .text(
@@ -198,6 +199,7 @@ $(document).ready(function () {
       method: "GET",
     }).then(function (data) {
       console.log(data);
+      $(".spinner").addClass("hide");
       var totalParks = $("<h3>").prependTo("#resultsIntro");
       totalParks
         .text(
@@ -256,6 +258,7 @@ $(document).ready(function () {
       method: "GET",
     }).then(function (data) {
       console.log(data);
+      $(".spinner").addClass("hide");
       var totalParks = $("<h3>").prependTo("#resultsIntro");
       totalParks
         .text(
@@ -318,6 +321,7 @@ $(document).ready(function () {
       method: "GET",
     }).then(function (data) {
       console.log(data);
+      $(".spinner").addClass("hide");
       var totalParks = $("<h3>").prependTo("#resultsIntro");
       totalParks
         .text(

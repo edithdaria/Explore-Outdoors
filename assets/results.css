@@ -107,6 +107,10 @@ header Img {
   font-weight: 500;
 }
 
+.hide {
+  display: none;
+}
+
 .results:hover {
   transform: translateY(-0.2rem);
   transition: transform 150ms;
