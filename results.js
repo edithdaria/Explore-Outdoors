@@ -433,11 +433,17 @@ $(document).ready(function () {
   }
 
   $("#parentResultsDiv").click(function (event) {
-    if (parkCode == null && event.target.parentNode != null) {
-      var longitude = event.target.parentNode.getAttribute("data-lon");
-      var latitude = event.target.parentNode.getAttribute("data-lat");
-      var parkCode = event.target.parentNode.getAttribute("data-park");
-    }
+    event.stopPropagation();
+
+    var d_results = event.target;
+
+    while(!d_results.getAttribute("data-park") && d_results.parentNode) d_results = d_results.parentNode;
+
+      
+      var longitude = d_results.getAttribute("data-lon");
+      var latitude = d_results.getAttribute("data-lat");
+      var parkCode = d_results.getAttribute("data-park");
+
 
     if (parkCode != null) {
       window.location.href =
@@ -451,4 +457,6 @@ $(document).ready(function () {
       console.log(window.location);
     }
   });
+
+
 });
