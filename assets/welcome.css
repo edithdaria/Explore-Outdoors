@@ -61,8 +61,9 @@
 
 @media only screen and (max-width: 600px) {
   #welcomeLogo {
-    max-width: 90%;
+    /* max-width: 90%; */
     margin-bottom: 25px;
+    max-height: 50%;
   }
 
   #indexBody {

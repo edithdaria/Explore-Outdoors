@@ -201,18 +201,9 @@ $(document).ready(function () {
       console.log(data);
       $(".spinner").addClass("hide");
       var totalParks = $("<h3>").prependTo("#resultsIntro");
-      totalParks
-        .text(
-          "We found " + data.data.length + " National Parks in " + stateName
-        )
-        .appendTo(totalParks);
-      $("<h3>")
-        .text(
-          "You picked " +
-            userInputActivities +
-            ". Try another activity to explore more."
-        )
-        .prependTo($("#resultsResume"));
+      totalParks.text("We found " + data.data.length + " National Parks in " + stateName).appendTo(totalParks);
+      $("<h3>").text("You picked " + userInputActivities + ". Try another activity to explore more.").prependTo($("#resultsResume"));
+
       for (var i = 0; i < data.data.length; i++) {
         var activitiesObj = data.data[i].activities;
         for (var j = 0; j < activitiesObj.length; j++) {
