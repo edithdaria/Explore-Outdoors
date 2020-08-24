@@ -164,7 +164,24 @@ footer {
   width: 100%;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 768px) {
+  .bodyContainer {
+    height: 110vh;
+  }
+  #searchContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  .search-cards {
+    width: 300px;
+    margin: 15px;
+    padding: 10px;
+  }
+
+}
+
+@media only screen and (max-width: 480px) {
   .bodyContainer {
     height: 110vh;
   }
@@ -180,14 +197,7 @@ footer {
   }
 
   footer {
-    background-color: #435646;
-    height: 1.5rem;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    width: 100%;
+    display: none;
   }
 
 }
