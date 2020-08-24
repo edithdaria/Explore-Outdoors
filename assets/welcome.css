@@ -55,17 +55,14 @@
   position: absolute;
   bottom: 0px;
 }
-#smallScreen {
+/* #smallScreen {
   display: none;
-}
+} */
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 768px) {
   #welcomeLogo {
-    /* max-width: 90%; */
+    max-width: 90%;
     margin-bottom: 25px;
-    max-height: 25%;
-    margin-top: 1rem;
-    /* max-width: 90%; */
   }
 
   #indexBody {
@@ -87,4 +84,31 @@
     max-width: 100%;
     /* background-color: lightcoral; */
   }
+}
+
+@media only screen and (max-width: 480px) {
+  #welcomeLogo {
+    max-width: 90%;
+    margin-bottom: 25px;
+  }
+
+  #indexBody {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: 90vh;
+    width: 100vw;
+  }
+
+  #logoImgIndex {
+    display: none;
+  }
+
+  /* #smallScreen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    background-color: lightcoral; */
+  /* } */
 }
