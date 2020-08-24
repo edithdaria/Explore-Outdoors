@@ -178,4 +178,16 @@ footer {
     margin: 15px;
     padding: 10px;
   }
+
+  footer {
+    background-color: #435646;
+    height: 1.5rem;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+  }
+
 }
