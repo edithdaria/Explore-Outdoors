@@ -178,3 +178,44 @@ header Img {
   width: 100%;
   margin-top: 2rem;
 } */
+
+@media only screen and (max-width: 480px) {
+
+  #parentResultsDiv h4 {
+    font-weight: bold;
+    font-size: 12pt;
+    color: white;
+  }
+
+  .container p {
+    display: inline-block;
+    flex-direction: column;
+    justify-content: right;
+    margin: 8px 6px 6px 6px;
+    align-items: center;
+  }
+
+  .container {
+    margin: 10px 8px 0px 8px;
+    max-width: 95%;
+  }
+
+  #resultsResume h3 {
+    padding: 10px 0px 15px 0px;
+    font-size: 14pt;
+    color: #435646;
+    font-weight: 500;
+  }
+
+  .resultsPage h3 {
+    font-weight: bold;
+    padding-bottom: 0.5rem;
+    font-size: 14pt;
+    color: #435646;
+  }
+
+  .results {
+  width: 80%;
+  }
+
+}
