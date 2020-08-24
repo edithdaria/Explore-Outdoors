@@ -266,4 +266,48 @@ footer {
     color: black;
   }
 
+  #detailMain {
+    width: 90%;
+    padding: 0rem 1rem 0rem 1rem;
+  }
+  
+  #detailMain h4 {
+    text-align: center;
+    font-size: 14pt;
+    /* width: 80%; */
+  }
+
+  #detailMain h2 {
+    width: 90%;
+    padding: 0rem 1rem 0rem 1rem;
+    font-weight: bolder;
+    font-size: 20pt;
+    margin-bottom: 10pt;
+  }
+
+  .detailsP {
+    margin-bottom: 0.25rem;
+    padding-top: .5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .grid-container {
+   display: flex;
+    flex-direction: column;
+  }
+
+  #weatherDashboard h1 {
+    font-size: 20pt;
+  }
+
+  .bg-info {
+    color: white;
+    line-height: 1.5rem;
+  }
+/* 
+  #mapid {
+    display: none;
+  } */
+
 }
