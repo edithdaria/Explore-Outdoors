@@ -244,3 +244,26 @@ footer {
   position: relative;
   width: 100%;
 }
+
+@media only screen and (max-width: 500px) {
+
+  #detailSidebar {
+    width:90%;
+    padding: .5em;
+    margin-right: 0.5rem;
+    font-size: 14pt;
+    line-height: 1.5rem;
+  }
+  
+  #detailSidebar h4 {
+    color: white;
+    padding-bottom: 3px;
+    font-weight: bolder;
+  }
+  
+  #detailSidebar a:link {
+    text-decoration: none;
+    color: black;
+  }
+
+}
