@@ -276,9 +276,9 @@ $(document).ready(function () {
         event.preventDefault();
 
         //console.log(Object.keys(statesObject)[3], Object.values(statesObject)[3]);
-        for (var i = 0; i < statesObject.length; i++) {
-        makeAjaxCall(Object.values(statesObject)[i], Object.keys(statesObject)[i]);
-        }
+        //for (var i = 0; i < statesObject.length; i++) {
+        makeAjaxCall(Object.values(statesObject)[0], Object.keys(statesObject)[0]);
+       // }
         // window.location.href = "./results.html" +             // saving object into the window location href with parameters of user's choices
         //     "?stateName=" + selectedOptions.state +         // saving object into the window location href of user's stateName choice
         //     "&activity=" + selectedOptions.activity +       // saving object into the window location href of user's activity choice
