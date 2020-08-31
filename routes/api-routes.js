@@ -7,7 +7,7 @@ module.exports = function (app) {
             console.log(body);
 
             //create the records in database if doesn't exist
-            await db.Parks.create(body);
+            await db.create(body);
 
         } catch (err) {
             console.log(err);
@@ -22,7 +22,7 @@ module.exports = function (app) {
             console.log(body);
 
             //get records from database if exists
-            await db.Parks.find({});
+            await db.parkdb.find({});
 
         } catch (err) {
             console.log(err);

@@ -6,20 +6,20 @@ const ParkSchema = new mongoose.Schema({
     stateCode: {
         type: String,
         trim: true,
-        unique: true
+        //unique: true
     },
 
     stateName: {
         type: String,
         trim: true,
-        unique: true
+       // unique: true
     },
 
     activities: [
         {
             type: String,
             trim: true,
-            unique: true
+            // unique: true
         }
     ],
 
@@ -27,15 +27,15 @@ const ParkSchema = new mongoose.Schema({
         {
             type: String,
             trim: true,
-            unique: true
+            // unique: true
         }
     ]
 
 });
 
-const Parks = mongoose.model("Park", ParkSchema);
+const parkdb = mongoose.model("park", ParkSchema);
 
-module.exports = Parks;
+module.exports = parkdb;
 
 
 
