@@ -6,10 +6,15 @@ const ParkSchema = new mongoose.Schema({
     stateCode: {
         type: String,
         trim: true,
-        // unique: true
     },
 
     stateName: {
+        type: String,
+        trim: true,
+
+    },
+
+    parkCode: {
         type: String,
         trim: true,
        unique: true
@@ -19,7 +24,6 @@ const ParkSchema = new mongoose.Schema({
         {
             type: String,
             trim: true,
-            // unique: true
         }
     ],
 
@@ -27,7 +31,6 @@ const ParkSchema = new mongoose.Schema({
         {
             type: String,
             trim: true,
-            // unique: true
         }
     ]
 

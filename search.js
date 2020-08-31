@@ -185,79 +185,9 @@ $(document).ready(function () {
 
     $("#stateList").change(function () {
         selectedOptions.state = $(this).val();
-        // console.log(selectedOptions);
-
-        var stateCode = statesObject[$(this).val()];
-        //console.log("StateCode: ", $(this).val());
-
-        //If not in db then fire this function:
-        makeAjaxCall(stateCode, $(this).val());
-
-
+        console.log(selectedOptions);
     });
 
-    function makeAjaxCall(stateCode, stateName) {
-        //ajax call to parks website
-        $.ajax({
-            url:
-                "https://developer.nps.gov/api/v1/parks?stateCode=" +
-                stateCode +
-                "&api_key=9bu5bi3vaKYgYQt7Cj4pxdYFN8pkwsL9zSIiRFEd",
-            method: "GET",
-        }).then(function (data) {
-            console.log("ajax: ", data);
-
-            const searchData = [];
-            const activitiesAjax = [];
-            const topicsAjax = [];
-            // how to extract unique combination from api response
-            for (var i = 0; i < data.data.length; i++) {
-
-                data.data[i].activities.forEach(e => {
-                    if(activitiesAjax.indexOf(e.name) === -1){
-                    activitiesAjax.push(e.name);
-                    }
-                });
-
-                data.data[i].topics.forEach(e => {
-                    if(topicsAjax.indexOf(e.name) === -1){
-                        topicsAjax.push(e.name);
-                    }
-                });
-
-             };
-
-             searchData.push({
-
-                stateCode: stateCode,
-                stateName: stateName,
-                activities: activitiesAjax,
-                topics: topicsAjax,
-
-            });
-
-            postObjToDatabase(searchData);
-
-            })
-
-    }
-
-    
-     function postObjToDatabase(data) {
-
-        $.ajax({
-            url: '/api/parks',
-            type: 'POST',
-            dataType: 'json',
-            contentType: 'application/json',
-            data: JSON.stringify(data),
-        }).catch((err) => {
-            console.log(err);
-        });
-    }
-
-
-    //TODO - ajax call to fetch related topics / themes
     $("#activitiesListBtn").change(function () {
         selectedOptions.activity = $(this).val();
         console.log(selectedOptions);
@@ -269,13 +199,86 @@ $(document).ready(function () {
 
     const submitButton = $("#submitButton");
     submitButton.click(function (event) {
+
         event.preventDefault();
 
-       // window.location.href = "./results.html" +             // saving object into the window location href with parameters of user's choices
-        //     "?stateName=" + selectedOptions.state +         // saving object into the window location href of user's stateName choice
-        //     "&activity=" + selectedOptions.activity +       // saving object into the window location href of user's activity choice
-        //     "&theme=" + selectedOptions.theme            // saving object into the window location href of user's theme choice
-        // console.log(window.location);
+    //    window.location.href = "./results.html" +             // saving object into the window location href with parameters of user's choices
+    //         "?stateName=" + selectedOptions.state +         // saving object into the window location href of user's stateName choice
+    //         "&activity=" + selectedOptions.activity +       // saving object into the window location href of user's activity choice
+    //         "&theme=" + selectedOptions.theme            // saving object into the window location href of user's theme choice
+    //     console.log(window.location);
+//    for (var i = 0; i < statesObject.length; i++){
+    //makeAjaxCall(Object.values(statesObject)[1], Object.keys(statesObject)[1]);
+    makeAjaxCall("NY");
+//break;
+//    };
+
     });
 
 })
+
+
+function makeAjaxCall(stateCode) {
+    //ajax call to parks website
+    $.ajax({
+        url:
+            "https://developer.nps.gov/api/v1/parks?stateCode=" +
+            stateCode +
+            "&api_key=9bu5bi3vaKYgYQt7Cj4pxdYFN8pkwsL9zSIiRFEd",
+        method: "GET",
+    }).then(function (data) {
+        console.log("ajax: ", data);
+
+        // const searchData = [];
+        // const activitiesAjax = [];
+        // const topicsAjax = [];
+        
+        // // how to extract unique combination from api response
+        // for (var i = 0; i < data.data.length; i++) {
+
+        //     data.data[i].activities.forEach(e => {
+        //         if(activitiesAjax.indexOf(e.name) === -1){
+        //         activitiesAjax.push(e.name);
+        //         }
+        //     });
+
+        //     data.data[i].topics.forEach(e => {
+        //         if(topicsAjax.indexOf(e.name) === -1){
+        //             topicsAjax.push(e.name);
+        //         }
+        //     });
+
+        //     searchData.push({
+
+        //         stateCode: stateCode,
+        //         stateName: stateName,
+        //         parkCode: data.data[i].parkCode,
+        //         activities: activitiesAjax,
+        //         topics: topicsAjax,
+    
+        //     });
+
+
+        //  };
+
+        postObjToDatabase(data);
+
+        });
+
+}
+
+
+
+    
+function postObjToDatabase(data) {
+
+    $.ajax({
+        url: '/api/parks',
+        type: 'POST',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+    }).catch((err) => {
+        console.log(err);
+    });
+}
