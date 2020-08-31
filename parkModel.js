@@ -6,13 +6,13 @@ const ParkSchema = new mongoose.Schema({
     stateCode: {
         type: String,
         trim: true,
-        //unique: true
+        // unique: true
     },
 
     stateName: {
         type: String,
         trim: true,
-       // unique: true
+       unique: true
     },
 
     activities: [

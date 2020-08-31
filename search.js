@@ -183,19 +183,15 @@ $(document).ready(function () {
     };
 
 
-    //TODO - ajax call to fetch activities
     $("#stateList").change(function () {
         selectedOptions.state = $(this).val();
         // console.log(selectedOptions);
 
-        //temporary state object to continue with ajax call
-        //var stateCode = statesObject[$(this).val()];
-        //console.log("StateCode: ", stateCode);
-
-        //TODO - make ajax call to database
+        var stateCode = statesObject[$(this).val()];
+        //console.log("StateCode: ", $(this).val());
 
         //If not in db then fire this function:
-        //makeAjaxCall(stateCode, $(this).val());
+        makeAjaxCall(stateCode, $(this).val());
 
 
     });
@@ -232,22 +228,22 @@ $(document).ready(function () {
              };
 
              searchData.push({
+
                 stateCode: stateCode,
                 stateName: stateName,
                 activities: activitiesAjax,
                 topics: topicsAjax,
+
             });
 
-             console.log("searchData: ", searchData);
-
-            //post to database
             postObjToDatabase(searchData);
 
-        });
+            })
+
     }
 
     
-    function postObjToDatabase(data) {
+     function postObjToDatabase(data) {
 
         $.ajax({
             url: '/api/parks',
@@ -275,11 +271,7 @@ $(document).ready(function () {
     submitButton.click(function (event) {
         event.preventDefault();
 
-        //console.log(Object.keys(statesObject)[3], Object.values(statesObject)[3]);
-        //for (var i = 0; i < statesObject.length; i++) {
-        makeAjaxCall(Object.values(statesObject)[0], Object.keys(statesObject)[0]);
-       // }
-        // window.location.href = "./results.html" +             // saving object into the window location href with parameters of user's choices
+       // window.location.href = "./results.html" +             // saving object into the window location href with parameters of user's choices
         //     "?stateName=" + selectedOptions.state +         // saving object into the window location href of user's stateName choice
         //     "&activity=" + selectedOptions.activity +       // saving object into the window location href of user's activity choice
         //     "&theme=" + selectedOptions.theme            // saving object into the window location href of user's theme choice
