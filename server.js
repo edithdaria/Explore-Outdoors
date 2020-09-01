@@ -33,20 +33,40 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/parkdb", { useN
 
 //require('./routes/api-routes')(app);
 
-app.post("/api/parks", ({ body }, res) => {
-  console.log({body});
-    const park = body;
-  
-    park.read = false;
-  
-    db.parks.save(park, (error, saved) => {
-      if (error) {
-        console.log(error);
-      } else {
-        res.send(saved);
-      }
-    });
+app.get("/state", (req, res) => {
+  console.dir(Object.keys(req.query));
+  db.parks.find({"data.states":Object.keys(req.query)[0]}, (error, found) => {
+    if (error) {
+      console.log(error);
+    } else {
+      res.json(found);
+    }
   });
+});
+
+app.get("/activities", (req, res) => {
+  console.log(req.query.state, req.query.activity);
+  db.parks.find({}, (error, found) => {
+    if (error) {
+      console.log(error);
+    } else {
+      res.json(found);
+    }
+  });
+});
+
+app.get("/topics", (req, res) => {
+  console.log(req.body);
+  db.parks.find({ read: true }, (error, found) => {
+    if (error) {
+      console.log(error);
+    } else {
+      res.json(found);
+    }
+  });
+});
+
+
 
 app.listen(PORT, () => {
     console.log(`App running on port ${PORT}!`);

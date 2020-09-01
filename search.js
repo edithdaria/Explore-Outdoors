@@ -10,138 +10,6 @@ $(document).ready(function () {
         "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "MP", "OH", "OK", "OR", "PA", "PR", "RI", "SC", "SD", "TN",
         "TX", "UT", "VT", "VA", "VI", "WA", "WV", "WI", "WY"];
 
-    var activities = [
-        "",
-        "Arts and Culture",
-        "Astronomy",
-        "Auto and ATV",
-        "Biking",
-        "Boating",
-        "Camping",
-        "Canyoneering",
-        "Caving",
-        "Climbing",
-        "Compass and GPS",
-        "Dog Sledding",
-        "Fishing",
-        "Flying",
-        "Food",
-        "Golfing",
-        "Guided Tours",
-        "Hands-On",
-        "Hiking",
-        "Horse Trekking",
-        "Hunting and Gathering",
-        "Ice Skating",
-        "Junior Ranger Program",
-        "Living History",
-        "Museum Exhibits",
-        "Paddling",
-        "Park Film",
-        "Playground",
-        "SCUBA Diving",
-        "Shopping",
-        "Skiing",
-        "Snorkeling",
-        "Snow Play",
-        "Snowmobiling",
-        "Snowshoeing",
-        "Surfing",
-        "Swimming",
-        "Team Sports",
-        "Tubing",
-        "Water Skiing",
-        "Wildlife Watching"
-    ]
-    var themes = [
-        "",
-        "African American Heritage",
-        "American Revolution",
-        "Ancient Seas",
-        "Animals",
-        "Archeology",
-        "Architecture and Building",
-        "Arctic",
-        "Artillery",
-        "Arts",
-        "Asian American Heritage",
-        "Aviation",
-        "Banking",
-        "Birthplace",
-        "Burial, Cemetery and Gravesite",
-        "Canyons and Canyonlands",
-        "Caves, Caverns and Karst",
-        "Civil Rights",
-        "Climate Change",
-        "Coasts, Islands and Atolls",
-        "Colonization and Settlement",
-        "Commerce",
-        "Dams",
-        "Dunes",
-        "Engineering",
-        "Enslavement",
-        "Estuaries and Mangroves",
-        "Explorers and Expeditions",
-        "Farming and  Agriculture",
-        "Fire",
-        "Foothills, Plains and Valleys",
-        "Forests and Woodlands",
-        "Forts",
-        "Fossils and Paleontology",
-        "Geology",
-        "Geothermal",
-        "Glaciers",
-        "Grasslands",
-        "Great Depression",
-        "Groundwater",
-        "Hispanic American Heritage",
-        "Immigration",
-        "Impact Craters",
-        "Incarceration",
-        "Industry",
-        "Laborer and Worker",
-        "Lakes",
-        "Landscape Design",
-        "Latino American Heritage",
-        "LGBTQ American Heritage",
-        "Maritime",
-        "Medicine",
-        "Migrations",
-        "Military",
-        "Monuments and Memorials",
-        "Mountains",
-        "Music",
-        "Native American Heritage",
-        "Natural Sounds",
-        "Night Sky",
-        "Oceans",
-        "Pacific Islander Heritage",
-        "Presidents",
-        "Reconstruction",
-        "Religion and Spirituality",
-        "River and Riparian",
-        "Rock Landscapes and Features",
-        "Scenic Views",
-        "Schools and Education",
-        "Science, Technology and Innovation",
-        "Social Movements",
-        "The Tropics",
-        "Thickets and Shrublands",
-        "Tragic Events",
-        "Trails",
-        "Transportation",
-        "Unique Species",
-        "Urban America",
-        "Volcanoes",
-        "Wars and Conflicts",
-        "Waterfalls",
-        "Watersheds",
-        "Westward Expansion",
-        "Wetlands",
-        "Wilderness",
-        "Women's History"
-    ]
-
     // object of states
     var statesObject = {};
     stateArray.forEach((state, stateAbb) => statesObject[state] = stateAbbreviations[stateAbb]);
@@ -149,31 +17,15 @@ $(document).ready(function () {
 
     // FOR STATE DROPDOWN LIST
     for (var i = 0; i < stateArray.length; i++) {
-        var option = $("<option>").appendTo(stateList);
         var state = stateArray[i];
         var stateAbb = stateAbbreviations[i];
-        option.attr("value", state);
-        option.attr("id", stateAbb);
-        option.text(state);
+        $("<option>").appendTo(stateList).attr({ "value": state, "id": stateAbb }).text(state);
     }
-    console.log(activities.length);
-
-    // FOR ACTIVITIES DROPDOWN LIST
-    for (var i = 0; i < activities.length; i++) {
-        var option = $("<option>").appendTo($("#activitiesListBtn"));
-        option.attr("value", activities[i]);
-        // option.attr("id", activities.id);
-        option.text(activities[i]);
-    }
-    console.log(themes.length);
 
     // FOR THEMES DROPDOWN LIST
-    for (var i = 0; i < themes.length; i++) {
-        var option = $("<option>").appendTo($("#themeListBtn"));
-        option.attr("value", themes[i]);
-        // option.attr("id", themes.id);
-        option.text(themes[i]);
-    }
+    // for (var i = 0; i < themes.length; i++) {
+    //     $("<option>").appendTo($("#themeListBtn")).attr("value", themes[i]).text(themes[i]);
+    // }
 
     // connect all input buttons together to the object
     var selectedOptions = {
@@ -185,15 +37,92 @@ $(document).ready(function () {
 
     $("#stateList").change(function () {
         selectedOptions.state = $(this).val();
-        //console.log(stateAbbreviations[stateArray.indexOf(selectedOptions.state)]);
 
-        makeAjaxCall(stateAbbreviations[stateArray.indexOf(selectedOptions.state)]);
+        //make an ajax get call to the database
+        const activitiesAjax = [];
+        const topicsAjax = [];
+
+        $.ajax({
+            url: '/state',
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: (stateAbbreviations[stateArray.indexOf(selectedOptions.state)]),
+        })
+            .then(function (data) {
+                console.log("data: ", data);
+                // FOR ACTIVITIES DROPDOWN LIST
+                for (var i = 0; i < data[0].data.length; i++) {
+
+                    data[0].data[i].activities.forEach(e => {
+                        if (activitiesAjax.indexOf(e.name) === -1) {
+                            activitiesAjax.push(e.name);
+                        }
+                    });
+
+                    data[0].data[i].topics.forEach(e => {
+                        if (topicsAjax.indexOf(e.name) === -1) {
+                            topicsAjax.push(e.name);
+                        }
+                    });
+                }
+
+                console.log("activities: ", activitiesAjax);
+                console.log("topics: ", topicsAjax );
+
+                activitiesAjax.forEach(e => {
+                    $("<option>").appendTo($("#activitiesListBtn")).attr("value", e).text(e);
+                })
+
+                topicsAjax.forEach(e => {
+                    $("<option>").appendTo($("#themeListBtn")).attr("value", e).text(e);
+                })
+
+
+            });
     });
 
     $("#activitiesListBtn").change(function () {
         selectedOptions.activity = $(this).val();
         console.log(selectedOptions);
+
+        $.ajax({
+            url: '/activities',
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: {"state": selectedOptions.state,
+            "activity": $(this).val()},
+        })
+            .then(function (data) {
+                console.log("data: ", data);
+                // FOR ACTIVITIES DROPDOWN LIST
+                for (var i = 0; i < data[0].data.length; i++) {
+
+                    data[0].data[i].topics.forEach(e => {
+                        if (topicsAjax.indexOf(e.name) === -1) {
+                            topicsAjax.push(e.name);
+                        }
+                    });
+                }
+
+                console.log("activities: ", activitiesAjax);
+                console.log("topics: ", topicsAjax );
+
+                activitiesAjax.forEach(e => {
+                    $("<option>").appendTo($("#activitiesListBtn")).attr("value", e).text(e);
+                })
+
+                topicsAjax.forEach(e => {
+                    $("<option>").appendTo($("#themeListBtn")).attr("value", e).text(e);
+                })
+
+
+            });
+
+
     })
+
     $("#themeListBtn").change(function () {
         selectedOptions.theme = $(this).val();
         console.log(selectedOptions);
@@ -201,89 +130,16 @@ $(document).ready(function () {
 
     const submitButton = $("#submitButton");
     submitButton.click(function (event) {
-
         event.preventDefault();
 
-    //    window.location.href = "./results.html" +             // saving object into the window location href with parameters of user's choices
-    //         "?stateName=" + selectedOptions.state +         // saving object into the window location href of user's stateName choice
-    //         "&activity=" + selectedOptions.activity +       // saving object into the window location href of user's activity choice
-    //         "&theme=" + selectedOptions.theme            // saving object into the window location href of user's theme choice
-    //     console.log(window.location);
-//    for (var i = 0; i < statesObject.length; i++){
-    //makeAjaxCall(Object.values(statesObject)[1], Object.keys(statesObject)[1]);
-    
-    //let  stateCode = ["AL", "AK", "AS"];
-
-    //stateCode.forEach(e => {makeAjaxCall(e)});
-//break;
-//    };
+        window.location.href = "./results.html" +             // saving object into the window location href with parameters of user's choices
+            "?stateName=" + selectedOptions.state +         // saving object into the window location href of user's stateName choice
+            "&activity=" + selectedOptions.activity +       // saving object into the window location href of user's activity choice
+            "&theme=" + selectedOptions.theme            // saving object into the window location href of user's theme choice
+        console.log(window.location);
 
     });
 
-})
+});
 
 
-function makeAjaxCall(stateCode) {
-    //ajax call to parks website
-    $.ajax({
-        url:
-            "https://developer.nps.gov/api/v1/parks?stateCode=" +
-            stateCode +
-            "&api_key=9bu5bi3vaKYgYQt7Cj4pxdYFN8pkwsL9zSIiRFEd",
-        method: "GET",
-    }).then(function (data) {
-        console.log("ajax: ", data);
-
-        // const searchData = [];
-        // const activitiesAjax = [];
-        // const topicsAjax = [];
-        
-        // // how to extract unique combination from api response
-        // for (var i = 0; i < data.data.length; i++) {
-
-        //     data.data[i].activities.forEach(e => {
-        //         if(activitiesAjax.indexOf(e.name) === -1){
-        //         activitiesAjax.push(e.name);
-        //         }
-        //     });
-
-        //     data.data[i].topics.forEach(e => {
-        //         if(topicsAjax.indexOf(e.name) === -1){
-        //             topicsAjax.push(e.name);
-        //         }
-        //     });
-
-        //     searchData.push({
-
-        //         stateCode: stateCode,
-        //         stateName: stateName,
-        //         parkCode: data.data[i].parkCode,
-        //         activities: activitiesAjax,
-        //         topics: topicsAjax,
-    
-        //     });
-
-
-        //  };
-
-        postObjToDatabase(data);
-
-        });
-
-}
-
-
-
-    
-function postObjToDatabase(data) {
-
-    $.ajax({
-        url: '/api/parks',
-        type: 'POST',
-        dataType: 'json',
-        contentType: 'application/json',
-        data: JSON.stringify(data),
-    }).catch((err) => {
-        console.log(err);
-    });
-}

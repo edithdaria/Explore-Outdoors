@@ -1,4 +1,7 @@
-function makeAjaxCall(stateCode, stateName) {
+
+//makeAjaxCall(stateAbbreviations[stateArray.indexOf(selectedOptions.state)]);
+
+function makeAjaxCall(stateCode) {
     //ajax call to parks website
     $.ajax({
         url:
@@ -9,42 +12,43 @@ function makeAjaxCall(stateCode, stateName) {
     }).then(function (data) {
         console.log("ajax: ", data);
 
-        const searchData = [];
-        const activitiesAjax = [];
-        const topicsAjax = [];
-        // how to extract unique combination from api response
-        for (var i = 0; i < data.data.length; i++) {
+        // const searchData = [];
+        // const activitiesAjax = [];
+        // const topicsAjax = [];
+        
+        // // how to extract unique combination from api response
+        // for (var i = 0; i < data.data.length; i++) {
 
-            data.data[i].activities.forEach(e => {
-                if(activitiesAjax.indexOf(e.name) === -1){
-                activitiesAjax.push(e.name);
-                }
-            });
+        //     data.data[i].activities.forEach(e => {
+        //         if(activitiesAjax.indexOf(e.name) === -1){
+        //         activitiesAjax.push(e.name);
+        //         }
+        //     });
 
-            data.data[i].topics.forEach(e => {
-                if(topicsAjax.indexOf(e.name) === -1){
-                    topicsAjax.push(e.name);
-                }
-            });
+        //     data.data[i].topics.forEach(e => {
+        //         if(topicsAjax.indexOf(e.name) === -1){
+        //             topicsAjax.push(e.name);
+        //         }
+        //     });
 
-         };
+        //     searchData.push({
 
-         searchData.push({
+        //         stateCode: stateCode,
+        //         stateName: stateName,
+        //         parkCode: data.data[i].parkCode,
+        //         activities: activitiesAjax,
+        //         topics: topicsAjax,
+    
+        //     });
 
-            stateCode: stateCode,
-            stateName: stateName,
-            activities: activitiesAjax,
-            topics: topicsAjax,
+
+        //  };
+
+        postObjToDatabase(data);
 
         });
 
-        postObjToDatabase(searchData);
-
-        })
-
 }
-
-
 
     
 function postObjToDatabase(data) {
@@ -60,3 +64,17 @@ function postObjToDatabase(data) {
     });
 }
 
+//__________________________________
+//server.js:
+
+app.post("/api/parks", ({ body }, res) => {
+    const park = body;  
+ 
+    db.parks.save(park, (error, saved) => {
+      if (error) {
+        console.log(error);
+      } else {
+        res.send(saved);
+      }
+    });
+  });
