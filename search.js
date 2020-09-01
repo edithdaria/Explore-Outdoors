@@ -209,7 +209,9 @@ $(document).ready(function () {
     //     console.log(window.location);
 //    for (var i = 0; i < statesObject.length; i++){
     //makeAjaxCall(Object.values(statesObject)[1], Object.keys(statesObject)[1]);
-    makeAjaxCall("NY");
+    let  stateCode = ["AL", "AK", "AS"];
+    
+    stateCode.forEach(e => {makeAjaxCall(e)});
 //break;
 //    };
 
