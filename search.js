@@ -185,7 +185,7 @@ $(document).ready(function () {
 
     $("#stateList").change(function () {
         selectedOptions.state = $(this).val();
-        console.log(selectedOptions);
+        //console.log(stateAbbreviations[stateArray.indexOf(selectedOptions.state)]);
     });
 
     $("#activitiesListBtn").change(function () {
@@ -209,8 +209,9 @@ $(document).ready(function () {
     //     console.log(window.location);
 //    for (var i = 0; i < statesObject.length; i++){
     //makeAjaxCall(Object.values(statesObject)[1], Object.keys(statesObject)[1]);
-    let  stateCode = ["AL", "AK", "AS"];
     
+    let  stateCode = ["AL", "AK", "AS"];
+
     stateCode.forEach(e => {makeAjaxCall(e)});
 //break;
 //    };
