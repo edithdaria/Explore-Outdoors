@@ -29,7 +29,7 @@ app.use(express.json({limit: "16mb"}));
 
 app.use(express.static("./"));
 
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/parkdb", { useNewUrlParser: true });
+mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://user:Password1@clusterexplore.uqtfh.mongodb.net/parkdb?retryWrites=true&w=majority", { useNewUrlParser: true });
 
 //require('./routes/api-routes')(app);
 

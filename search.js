@@ -35,12 +35,17 @@ $(document).ready(function () {
     };
 
 
-    $("#stateList").change(function () {
+    $("#stateList").change(function (event) {
+        console.log("test inside change");
+        event.preventDefault();
+
         selectedOptions.state = $(this).val();
 
         //make an ajax get call to the database
         const activitiesAjax = [];
         const topicsAjax = [];
+        ($("#activitiesListBtn")).text('');
+        ($("#themeListBtn")).text('');
 
         $.ajax({
             url: '/state',
@@ -68,7 +73,7 @@ $(document).ready(function () {
                 }
 
                 console.log("activities: ", activitiesAjax);
-                console.log("topics: ", topicsAjax );
+                console.log("topics: ", topicsAjax);
 
                 activitiesAjax.forEach(e => {
                     $("<option>").appendTo($("#activitiesListBtn")).attr("value", e).text(e);
@@ -91,8 +96,10 @@ $(document).ready(function () {
             type: 'GET',
             dataType: 'json',
             contentType: 'application/json',
-            data: {"state": selectedOptions.state,
-            "activity": $(this).val()},
+            data: {
+                "state": selectedOptions.state,
+                "activity": $(this).val()
+            },
         })
             .then(function (data) {
                 console.log("data: ", data);
@@ -107,7 +114,7 @@ $(document).ready(function () {
                 }
 
                 console.log("activities: ", activitiesAjax);
-                console.log("topics: ", topicsAjax );
+                console.log("topics: ", topicsAjax);
 
                 activitiesAjax.forEach(e => {
                     $("<option>").appendTo($("#activitiesListBtn")).attr("value", e).text(e);
