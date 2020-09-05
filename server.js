@@ -1,3 +1,4 @@
+
 // setup server
 const express = require("express");
 
@@ -70,6 +71,10 @@ app.get("/topics", (req, res) => {
     }
   });
 });
+
+app.get("/test", (req, res) => {
+    res.send("test string")
+})
 
 
 
