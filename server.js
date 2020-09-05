@@ -73,6 +73,10 @@ app.get("/topics", (req, res) => {
   });
 });
 
+app.get("/test", (req, res) => {
+    res.send("test string")
+})
+
 
 
 app.listen(PORT, () => {
