@@ -33,19 +33,20 @@ app.use(express.static("./"));
 //mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://user:Password1@clusterexplore.uqtfh.mongodb.net/parkdb?retryWrites=true&w=majority", { useNewUrlParser: true });
 
 mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://user:Password1@clusterexplore.uqtfh.mongodb.net/parkdb?retryWrites=true&w=majority", { useNewUrlParser: true });
-
+mongoose.connection.on('connected', () => console.log('Connected'));
+mongoose.connection.on('error', () => console.log('Connection failed with - ',err));
 
 //require('./routes/api-routes')(app);
 
 app.get("/state", (req, res) => {
   console.dir(Object.keys(req.query));
-  //db.parks.find({"data.states":Object.keys(req.query)[0]}, (error, found) => {
-  //   if (error) {
-  //     console.log(error);
-  //   } else {
-  //     res.json(found);
-  //   }
-  // });
+  db.parks.find({"data.states":Object.keys(req.query)[0]}, (error, found) => {
+    if (error) {
+      console.log(error);
+    } else {
+      res.json(found);
+    }
+  });
 });
 
 app.get("/activities", (req, res) => {
