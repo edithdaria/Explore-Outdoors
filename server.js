@@ -40,18 +40,22 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://user:Password1@cluste
 
 app.get("/state", (req, res) => {
 
+/*
   //console.dir(Object.keys(req.query));
   res.send("req.query " + JSON.stringify(req.query)
 + process.env.MONGODB_URI + " = "
 )
+*/
 
-  //db.parks.find({"data.states":Object.keys(req.query)[0]}, (error, found) => {
-  //   if (error) {
-  //     console.log(error);
-  //   } else {
-  //     res.json(found);
-  //   }
-  // });
+  db.parks.find({"data.states":Object.keys(req.query)[0]}, (error, found) => {
+     if (error) {
+  	res.send("success ")
+       //console.log(error);
+     } else {
+  	res.send("error ")
+       //res.json(found);
+     }
+  });
 });
 
 app.get("/activities", (req, res) => {
