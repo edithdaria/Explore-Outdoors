@@ -43,7 +43,6 @@ app.get("/state", (req, res) => {
   //console.dir(Object.keys(req.query));
   res.send("req.query " + JSON.stringify(req.query)
 + process.env.MONGODB_URI + " = "
-+ JSON.stringify(mongoose)
 )
 
   //db.parks.find({"data.states":Object.keys(req.query)[0]}, (error, found) => {
