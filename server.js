@@ -13,7 +13,7 @@ const mongoose = require("mongoose");
 
 //db
 //const db = mongojs("parkdb", ["parks"]);
-const db = mongojs("process.env.MONGODB_URI", ["parks"]);
+const db = mongojs("mongodb+srv://user:Password1@clusterexplore.uqtfh.mongodb.net/parkdb?retryWrites=true&w=majority", ["parks"]);
 
 //port setup
 const PORT = process.env.PORT || 3000;
