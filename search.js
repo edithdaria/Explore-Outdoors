@@ -97,12 +97,12 @@ $(document).ready(function () {
             dataType: 'json',
             contentType: 'application/json',
             data: {
-                "state": selectedOptions.state,
+                "state": stateAbbreviations[stateArray.indexOf(selectedOptions.state)],
                 "activity": $(this).val()
             },
         })
             .then(function (data) {
-                console.log("data: ", data);
+                console.log("activities data: ", data);
                 // FOR ACTIVITIES DROPDOWN LIST
                 for (var i = 0; i < data[0].data.length; i++) {
 

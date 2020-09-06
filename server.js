@@ -34,7 +34,6 @@ app.use(express.static("./"));
 //require('./routes/api-routes')(app);
 
 app.get("/state", (req, res) => {
-  console.dir(Object.keys(req.query));
   db.parks.find({"data.states":Object.keys(req.query)[0]}, (error, found) => {
     if (error) {
       console.log(error);
@@ -46,7 +45,8 @@ app.get("/state", (req, res) => {
 
 app.get("/activities", (req, res) => {
   console.log(req.query.state, req.query.activity);
-  db.parks.find({}, (error, found) => {
+  db.parks.aggregate([{$unwind:"$data"}, {$unwind:"$data.activities"}, 
+  {$match:{"data.activities.name":'"' + req.query.activity + '"', "data.states":Object.keys(req.query)[0]}}], (error, found) => {
     if (error) {
       console.log(error);
     } else {
