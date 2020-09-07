@@ -13,7 +13,6 @@ $(document).ready(function () {
     // object of states
     var statesObject = {};
     stateArray.forEach((state, stateAbb) => statesObject[state] = stateAbbreviations[stateAbb]);
-    console.log(statesObject);
 
     // FOR STATE DROPDOWN LIST
     for (var i = 0; i < stateArray.length; i++) {
@@ -36,14 +35,14 @@ $(document).ready(function () {
 
 
     $("#stateList").change(function (event) {
-        console.log("test inside change");
         event.preventDefault();
 
         selectedOptions.state = $(this).val();
 
         //make an ajax get call to the database
-        const activitiesAjax = [];
-        const topicsAjax = [];
+        const activitiesAjax = ["Select An Activity (Optional)"];
+        const topicsAjax = ["Select A Theme (Optional)"];
+
         ($("#activitiesListBtn")).text('');
         ($("#themeListBtn")).text('');
 
@@ -55,7 +54,7 @@ $(document).ready(function () {
             data: (stateAbbreviations[stateArray.indexOf(selectedOptions.state)]),
         })
             .then(function (data) {
-                console.log("data: ", data);
+
                 // FOR ACTIVITIES DROPDOWN LIST
                 for (var i = 0; i < data[0].data.length; i++) {
 
@@ -72,9 +71,6 @@ $(document).ready(function () {
                     });
                 }
 
-                console.log("activities: ", activitiesAjax);
-                console.log("topics: ", topicsAjax);
-
                 activitiesAjax.forEach(e => {
                     $("<option>").appendTo($("#activitiesListBtn")).attr("value", e).text(e);
                 })
@@ -89,58 +85,103 @@ $(document).ready(function () {
 
     $("#activitiesListBtn").change(function () {
         selectedOptions.activity = $(this).val();
-        console.log(selectedOptions);
 
-        $.ajax({
-            url: '/activities',
-            type: 'GET',
-            dataType: 'json',
-            contentType: 'application/json',
-            data: {
-                "state": stateAbbreviations[stateArray.indexOf(selectedOptions.state)],
-                "activity": $(this).val()
-            },
-        })
-            .then(function (data) {
-                console.log("activities data: ", data);
-                // FOR ACTIVITIES DROPDOWN LIST
-                for (var i = 0; i < data[0].data.length; i++) {
+        if (($("#themeListBtn")).val() === "Select A Theme (Optional)") {
 
-                    data[0].data[i].topics.forEach(e => {
-                        if (topicsAjax.indexOf(e.name) === -1) {
-                            topicsAjax.push(e.name);
-                        }
-                    });
-                }
+            const topicsAjax = ["Select A Theme (Optional)"];
 
-                console.log("activities: ", activitiesAjax);
-                console.log("topics: ", topicsAjax);
+            ($("#themeListBtn")).text('');
 
-                activitiesAjax.forEach(e => {
-                    $("<option>").appendTo($("#activitiesListBtn")).attr("value", e).text(e);
-                })
+            $.ajax({
+                url: '/activities',
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: {
+                    "state": stateAbbreviations[stateArray.indexOf(selectedOptions.state)],
+                    "activity": $(this).val()
+                },
+            })
+                .then(function (data) {
+                    console.log("activities data: ", data);
+                    // console.log("type of: " + typeof(data));
+                    const entries = Object.entries(data);
+                    console.log("entries Length: " + entries.length);
+                    console.log(entries[0][1].data.topics);
 
-                topicsAjax.forEach(e => {
-                    $("<option>").appendTo($("#themeListBtn")).attr("value", e).text(e);
-                })
+                    // FOR ACTIVITIES DROPDOWN LIST
+                    for (var i = 0; i < entries.length; i++) {
+                        //console.log("data : " + entries[i][1].data.topics[0]);
+
+                        entries[i][1].data.topics.forEach(e => {
+                            if (topicsAjax.indexOf(e.name) === -1) {
+                                topicsAjax.push(e.name);
+                            }
+                        });
+                    }
+
+                    topicsAjax.forEach(e => {
+                        $("<option>").appendTo($("#themeListBtn")).attr("value", e).text(e);
+                    })
 
 
-            });
+                });
 
-
-    })
+        }
+    });
 
     $("#themeListBtn").change(function () {
         selectedOptions.theme = $(this).val();
         console.log(selectedOptions);
-    })
+
+        if (($("#activitiesListBtn")).val() === "Select An Activity (Optional)") {
+
+            const activitiesAjax = ["Select An Activity (Optional)"];
+
+            ($("#activitiesListBtn")).text('');
+
+            $.ajax({
+                url: '/topics',
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: {
+                    "state": stateAbbreviations[stateArray.indexOf(selectedOptions.state)],
+                    "topics": $(this).val()
+                },
+            })
+                .then(function (data) {
+                    console.log("Topics data: ", data);
+                    // console.log("type of: " + typeof(data));
+                    const entries = Object.entries(data);
+                    console.log("entries Length: " + entries.length);
+                    console.log(entries[0][1].data.activities);
+
+                    // FOR ACTIVITIES DROPDOWN LIST
+                    for (var i = 0; i < entries.length; i++) {
+                        entries[i][1].data.activities.forEach(e => {
+                            if (activitiesAjax.indexOf(e.name) === -1) {
+                                activitiesAjax.push(e.name);
+                            }
+                        });
+                    }
+
+                    activitiesAjax.forEach(e => {
+                        $("<option>").appendTo($("#activitiesListBtn")).attr("value", e).text(e);
+                    })
+
+
+                });
+        }
+
+    });
 
     const submitButton = $("#submitButton");
     submitButton.click(function (event) {
         event.preventDefault();
 
         window.location.href = "./results.html" +             // saving object into the window location href with parameters of user's choices
-            "?stateName=" + selectedOptions.state +         // saving object into the window location href of user's stateName choice
+            "?stateCode=" + stateAbbreviations[stateArray.indexOf(selectedOptions.state)] +         // saving object into the window location href of user's stateCode choice
             "&activity=" + selectedOptions.activity +       // saving object into the window location href of user's activity choice
             "&theme=" + selectedOptions.theme            // saving object into the window location href of user's theme choice
         console.log(window.location);

@@ -46,7 +46,7 @@ app.get("/state", (req, res) => {
 app.get("/activities", (req, res) => {
   console.log(req.query.state, req.query.activity);
   db.parks.aggregate([{$unwind:"$data"}, {$unwind:"$data.activities"}, 
-  {$match:{"data.activities.name":'"' + req.query.activity + '"', "data.states":Object.keys(req.query)[0]}}], (error, found) => {
+  {$match:{"data.activities.name":req.query.activity, "data.states": req.query.state}}], (error, found) => {
     if (error) {
       console.log(error);
     } else {
@@ -56,8 +56,9 @@ app.get("/activities", (req, res) => {
 });
 
 app.get("/topics", (req, res) => {
-  console.log(req.body);
-  db.parks.find({ read: true }, (error, found) => {
+  console.log(req.query.state, req.query.topics);
+  db.parks.aggregate([{$unwind:"$data"}, {$unwind:"$data.topics"}, 
+  {$match:{"data.topics.name":req.query.topics, "data.states": req.query.state}}], (error, found) => {
     if (error) {
       console.log(error);
     } else {
@@ -65,11 +66,6 @@ app.get("/topics", (req, res) => {
     }
   });
 });
-
-app.get("/test", (req, res) => {
-    res.send("test string")
-})
-
 
 
 app.listen(PORT, () => {

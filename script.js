@@ -43,12 +43,6 @@ $(document).ready(function () {
   var detailMain = $("#detailMain");
   var detailImageArea = $("#detailImages");
 
-  //variables used for loops --- i, j, k, l, m
-
-  //CONFIRMS THAT detailMain is accessible inside a function
-  //var testingButton = $("<button>").text("Testing").appendTo(detailMain);
-  //testingButton.click(function () {
-
   displayDetails();
 
   function displayDetails() {
@@ -57,17 +51,7 @@ $(document).ready(function () {
 
     var apiKey = "9bu5bi3vaKYgYQt7Cj4pxdYFN8pkwsL9zSIiRFEd";
 
-    /*  var queryURL =
-      "https://developer.nps.gov/api/v1/parks?api_key=" +
-      apiKey +
-      "&stateCode=" +
-      "NY";
-  */
-    var queryURLPark =
-      "https://developer.nps.gov/api/v1/parks?api_key=" +
-      apiKey +
-      "&parkCode=" +
-      parkCode;
+    var queryURLPark = "https://developer.nps.gov/api/v1/parks?api_key=" + apiKey + "&parkCode=" + parkCode;
 
     $.ajax({
       url: queryURLPark,
@@ -209,70 +193,25 @@ $(document).ready(function () {
       }
     });
 
-    // Get API key.
-    var weatherURL =
-    //get weather by latitude and longitude
-    "https://api.openweathermap.org/data/2.5/weather?appid=571d9f58c398657c20313ac4142d50fd&us&mode&units=imperial&lat=" + latitude + "&lon=" + longitude;
+    var weatherURL = "https://api.openweathermap.org/data/2.5/weather?appid=571d9f58c398657c20313ac4142d50fd&us&mode&units=imperial&lat=" + latitude + "&lon=" + longitude;
 
     $.ajax({
       url: weatherURL,
       method: "GET",
     }).then(function (data) {
       console.log(data);
-      var bootstrapCardEl = $(
-        '<div class="card bg-info" style="width: 16rem;"></div>'
-      );
-      var cardImgEl = $(
-        '<img src="http://openweathermap.org/img/wn/' +
-        data.weather[0].icon +
-          '@2x.png" class="card-img-top" alt="..."></img>'
-      );
-      var cardBodyEl = $(
-        '<div class="card-body">' +
-          "<h5>" +
-          data.name +
-          " , " +
-          data.sys.country +
-          "</h5>" +
-          "</div>"
-      );
-      var h5El = $(
-        '<h5 class="card-title">' +
-          data.weather[0].main +
-          " -- " +
-          data.weather[0].description +
-          "</h5>"
-      );
-      var bodytemp = $(
-        '<p class="card-text">' +
-          "Temp: " +
-          data.main.temp +
-          "º" +
-          "<br>" +
-          "Feels Like: " +
-          data.main.feels_like +
-          "º" +
-          "<br>" +
-          "Min. " +
-          data.main.temp_min +
-          "º" +
-          " | Max. " +
-          data.main.temp_max +
-          "º" +
-          "<br>" +
-          "Humidity: " +
-          data.main.humidity +
-          "%" +
-          "<br>" +
-          "Wind Speed: " +
-          data.wind.speed +
-          " mph" +
-          "</p>"
-      );
+      var bootstrapCardEl = $('<div class="card bg-info" style="width: 16rem;"></div>');
+      var cardImgEl = $('<img src="http://openweathermap.org/img/wn/' + data.weather[0].icon +'@2x.png" class="card-img-top" alt="..."></img>');
+      var cardBodyEl = $('<div class="card-body">' + "<h5>" + data.name + " , " + data.sys.country + "</h5>" + "</div>");
+      var h5El = $('<h5 class="card-title">' + data.weather[0].main + " -- " + data.weather[0].description + "</h5>");
+      var bodytemp = $('<p class="card-text">' + "Temp: " + data.main.temp + "º" +"<br>" +
+          "Feels Like: " + data.main.feels_like +"º" +"<br>" +
+          "Min. " + data.main.temp_min + "º" + " | Max. " + data.main.temp_max + "º" + "<br>" +
+          "Humidity: " + data.main.humidity + "%" + "<br>" +
+          "Wind Speed: " + data.wind.speed + " mph" +"</p>");
       cardBodyEl.append(h5El).append(bodytemp);
       bootstrapCardEl.append(cardImgEl).append(cardBodyEl);
       $("#weatherDashboard").append(bootstrapCardEl);
     });
-    //  });       //THE ENDING PARANTHESIS RELATED TO TESTING BUTTON
   }
 });

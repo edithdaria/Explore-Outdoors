@@ -1,174 +1,38 @@
 $(document).ready(function () {
   var urlParams = new URLSearchParams(window.location.search); //constructing URl with saved parameters from the window location href
-  var stateName = urlParams.get("stateName"); // getting stateName from the URL
-  console.log(stateName);
+  var stateCode = urlParams.get("stateCode"); // getting stateCode from the URL
   var stateActivities = urlParams.get("activity"); // getting the activities from the URL
-  console.log(stateActivities);
   var stateTheme = urlParams.get("theme"); // getting the activities from the URL
-  console.log(stateTheme); // getting theme from the URL
 
-  var stateArray = [
-    "Alabama",
-    "Alaska",
-    "American Samoa",
-    "Arizona",
-    "Arkansas",
-    "California",
-    "Colorado",
-    "Connecticut",
-    "Delaware",
-    "Dist. of Columbia",
-    "Florida",
-    "Georgia",
-    "Guam",
-    "Hawaii",
-    "Idaho",
-    "Illinois",
-    "Indiana",
-    "Iowa",
-    "Kansas",
-    "Kentucky",
-    "Louisiana",
-    "Maine",
-    "Maryland",
-    "Massachusetts",
-    "Michigan",
-    "Minnesota",
-    "Mississippi",
-    "Missouri",
-    "Montana",
-    "Nebraska",
-    "Nevada",
-    "New Hampshire",
-    "New Jersey",
-    "New Mexico",
-    "New York",
-    "North Carolina",
-    "North Dakota",
-    "Northern Mariana Islands",
-    "Ohio",
-    "Oklahoma",
-    "Oregon",
-    "Pennsylvania",
-    "Puerto Rico",
-    "Rhode Island",
-    "South Carolina",
-    "South Dakota",
-    "Tennessee",
-    "Texas",
-    "Utah",
-    "Vermont",
-    "Virginia",
-    "Virgin Islands",
-    "Washington",
-    "West Virginia",
-    "Wisconsin",
-    "Wyoming",
-  ];
 
-  var stateAbbreviations = [
-    "AL",
-    "AK",
-    "AS",
-    "AZ",
-    "AR",
-    "CA",
-    "CO",
-    "CT",
-    "DE",
-    "DC",
-    "FL",
-    "GA",
-    "GU",
-    "HI",
-    "ID",
-    "IL",
-    "IN",
-    "IA",
-    "KS",
-    "KY",
-    "LA",
-    "ME",
-    "MD",
-    "MA",
-    "MI",
-    "MN",
-    "MS",
-    "MO",
-    "MT",
-    "NE",
-    "NV",
-    "NH",
-    "NJ",
-    "NM",
-    "NY",
-    "NC",
-    "ND",
-    "MP",
-    "OH",
-    "OK",
-    "OR",
-    "PA",
-    "PR",
-    "RI",
-    "SC",
-    "SD",
-    "TN",
-    "TX",
-    "UT",
-    "VT",
-    "VA",
-    "VI",
-    "WA",
-    "WV",
-    "WI",
-    "WY",
-  ];
-
-  // object of states
-  var statesObject = {};
-  stateArray.forEach(
-    (state, stateAbb) => (statesObject[state] = stateAbbreviations[stateAbb])
-  );
-  console.log(statesObject);
-
-  // submitButton on click function to call AJAX
-  console.log(stateName);
-  // var stateCode = "NY";
-  var stateCode = statesObject[stateName];
-  console.log(stateCode);
-
-  function ajaxStatesCall(userInput) {
+  function ajaxStatesCall(stateCode) {
     // if user picks only state option it'll be running only this AJAX api
 
     $.ajax({
-      url:
-        "https://developer.nps.gov/api/v1/parks?stateCode=" +
-        userInput +
-        "&api_key=9bu5bi3vaKYgYQt7Cj4pxdYFN8pkwsL9zSIiRFEd",
-      method: "GET",
+      url: '/state',
+      type: 'GET',
+      dataType: 'json',
+      contentType: 'application/json',
+      data: stateCode,
+
     }).then(function (data) {
       console.log(data);
-      console.log(data.data.length);
+      console.log(data[0].data.length);
       $(".spinner").addClass("hide");
-      var totalParks = $("<h3>").prependTo("#resultsIntro");
-      totalParks
-        .text(
-          "We found " + data.data.length + " National Parks in " + stateName
-        )
-        .appendTo(totalParks);
-      for (var i = 0; i < data.data.length; i++) {
-        var parkName = data.data[i].fullName;
+      $("<h3>").text("Click on any park to learn more...").prependTo($("#resultsResume"));
+
+      for (var i = 0; i < data[0].data.length; i++) {
+        var parkName = data[0].data[i].fullName;
         var resultsDiv = $("<div>")
           .addClass("results")
           .appendTo("#parentResultsDiv")
           .attr({
-            "data-lon": data.data[i].longitude,
-            "data-lat": data.data[i].latitude,
-            "data-park": data.data[i].parkCode,
+            "data-lon": data[0].data[i].longitude,
+            "data-lat": data[0].data[i].latitude,
+            "data-park": data[0].data[i].parkCode,
           });
         $("<h4>").text(parkName).appendTo(resultsDiv);
-        var activitiesObj = data.data[i].activities;
+        var activitiesObj = data[0].data[i].activities;
         var divOfPtags = $("<div>").addClass("container");
 
         for (var j = 0; j < activitiesObj.length; j++) {
@@ -177,45 +41,44 @@ $(document).ready(function () {
         divOfPtags.appendTo(resultsDiv);
 
         var entranceFee = $("<p>");
-        if (data.data[i].entranceFees[0]) {
+        if (data[0].data[i].entranceFees[0]) {
           entranceFee
             .text(
-              data.data[i].entranceFees[0].title +
+              data[0].data[i].entranceFees[0].title +
                 ": $" +
-                parseFloat(data.data[i].entranceFees[0].cost).toFixed(2)
+                parseFloat(data[0].data[i].entranceFees[0].cost).toFixed(2)
             )
             .appendTo(resultsDiv);
         }
       }
     });
   }
-  function ajaxStateActivityCall(userInputState, userInputActivities) {
+  function ajaxStateActivityCall(stateCode, userInputActivities) {
     // if user picks state and activity, it'll be filtering in the given state by matching activity
     $.ajax({
-      url:
-        "https://developer.nps.gov/api/v1/parks?stateCode=" +
-        userInputState +
-        "&api_key=9bu5bi3vaKYgYQt7Cj4pxdYFN8pkwsL9zSIiRFEd",
-      method: "GET",
+      url: '/state',
+      type: 'GET',
+      dataType: 'json',
+      contentType: 'application/json',
+      data: stateCode,
     }).then(function (data) {
       console.log(data);
+      console.log(data[0].data.length);
       $(".spinner").addClass("hide");
-      var totalParks = $("<h3>").prependTo("#resultsIntro");
-      totalParks.text("We found " + data.data.length + " National Parks in " + stateName).appendTo(totalParks);
-      $("<h3>").text("You picked " + userInputActivities + ". Try another activity to explore more.").prependTo($("#resultsResume"));
+      $("<h3>").text("Click on any park to learn more...").prependTo($("#resultsResume"));
 
-      for (var i = 0; i < data.data.length; i++) {
-        var activitiesObj = data.data[i].activities;
+      for (var i = 0; i < data[0].data.length; i++) {
+        var activitiesObj = data[0].data[i].activities;
         for (var j = 0; j < activitiesObj.length; j++) {
           if (activitiesObj[j].name == userInputActivities) {
-            var parkName = data.data[i].fullName;
+            var parkName = data[0].data[i].fullName;
             var resultsDiv = $("<div>")
               .addClass("results")
               .appendTo("#parentResultsDiv")
               .attr({
-                "data-lon": data.data[i].longitude,
-                "data-lat": data.data[i].latitude,
-                "data-park": data.data[i].parkCode,
+                "data-lon": data[0].data[i].longitude,
+                "data-lat": data[0].data[i].latitude,
+                "data-park": data[0].data[i].parkCode,
               });
             $("<h4>").text(parkName).appendTo(resultsDiv);
             var divOfPtags = $("<div>").addClass("container");
@@ -225,12 +88,12 @@ $(document).ready(function () {
             }
             divOfPtags.appendTo(resultsDiv);
             var entranceFee = $("<p>");
-            if (data.data[i].entranceFees[0]) {
+            if (data[0].data[i].entranceFees[0]) {
               entranceFee
                 .text(
-                  data.data[i].entranceFees[0].title +
+                  data[0].data[i].entranceFees[0].title +
                     ": $" +
-                    parseFloat(data.data[i].entranceFees[0].cost).toFixed(2)
+                    parseFloat(data[0].data[i].entranceFees[0].cost).toFixed(2)
                 )
                 .appendTo(resultsDiv);
             }
@@ -239,42 +102,31 @@ $(document).ready(function () {
       }
     });
   }
-  function ajaxStateThemesCall(userInputState, userInputTheme) {
+  function ajaxStateThemesCall(stateCode, userInputTheme) {
     // if user picks state and theme, it'' be filtering in the given state by matching theme
     $.ajax({
-      url:
-        "https://developer.nps.gov/api/v1/parks?stateCode=" +
-        userInputState +
-        "&api_key=9bu5bi3vaKYgYQt7Cj4pxdYFN8pkwsL9zSIiRFEd",
-      method: "GET",
+      url: '/state',
+      type: 'GET',
+      dataType: 'json',
+      contentType: 'application/json',
+      data: stateCode,
     }).then(function (data) {
       console.log(data);
       $(".spinner").addClass("hide");
-      var totalParks = $("<h3>").prependTo("#resultsIntro");
-      totalParks
-        .text(
-          "We found " + data.data.length + " National Parks in " + stateName
-        )
-        .appendTo(totalParks);
-      $("<h3>")
-        .text(
-          "You picked " +
-            userInputTheme +
-            ". Try another theme to explore more."
-        )
-        .prependTo($("#resultsResume"));
-      for (var i = 0; i < data.data.length; i++) {
-        var topicsObj = data.data[i].topics;
+      $("<h3>").text("Click on any park to learn more...").prependTo($("#resultsResume"));
+      
+      for (var i = 0; i < data[0].data.length; i++) {
+        var topicsObj = data[0].data[i].topics;
         for (var j = 0; j < topicsObj.length; j++) {
           if (topicsObj[j].name == userInputTheme) {
-            var parkName = data.data[i].fullName;
+            var parkName = data[0].data[i].fullName;
             var resultsDiv = $("<div>")
               .addClass("results")
               .appendTo("#parentResultsDiv")
               .attr({
-                "data-lon": data.data[i].longitude,
-                "data-lat": data.data[i].latitude,
-                "data-park": data.data[i].parkCode,
+                "data-lon": data[0].data[i].longitude,
+                "data-lat": data[0].data[i].latitude,
+                "data-park": data[0].data[i].parkCode,
               });
             $("<h4>").text(parkName).appendTo(resultsDiv);
             var divOfPtags = $("<div>").addClass("container");
@@ -284,12 +136,12 @@ $(document).ready(function () {
             }
             divOfPtags.appendTo(resultsDiv);
             var entranceFee = $("<p>");
-            if (data.data[i].entranceFees[0]) {
+            if (data[0].data[i].entranceFees[0]) {
               entranceFee
                 .text(
-                  data.data[i].entranceFees[0].title +
+                  data[0].data[i].entranceFees[0].title +
                     ": $" +
-                    parseFloat(data.data[i].entranceFees[0].cost).toFixed(2)
+                    parseFloat(data[0].data[i].entranceFees[0].cost).toFixed(2)
                 )
                 .appendTo(resultsDiv);
             }
@@ -298,42 +150,24 @@ $(document).ready(function () {
       }
     });
   }
-  function ajaxStateActivityThemeCall(
-    userInputState,
-    userInputActivities,
-    userInputTheme
-  ) {
+  function ajaxStateActivityThemeCall(userInputState, userInputActivities, userInputTheme) {
     // if user picks only state option it'll be running only this AJAX api
     $.ajax({
-      url:
-        "https://developer.nps.gov/api/v1/parks?stateCode=" +
-        userInputState +
-        "&api_key=9bu5bi3vaKYgYQt7Cj4pxdYFN8pkwsL9zSIiRFEd",
-      method: "GET",
+      url: '/state',
+      type: 'GET',
+      dataType: 'json',
+      contentType: 'application/json',
+      data: stateCode,
     }).then(function (data) {
       console.log(data);
       $(".spinner").addClass("hide");
-      var totalParks = $("<h3>").prependTo("#resultsIntro");
-      totalParks
-        .text(
-          "We found " + data.data.length + " National Parks in " + stateName
-        )
-        .appendTo(totalParks);
-      $("<h3>")
-        .text(
-          "You picked " +
-            userInputActivities +
-            " and " +
-            userInputTheme +
-            ". Try another activity or theme to explore more."
-        )
-        .prependTo($("#resultsResume"));
+      $("<h3>").text("Click on any park to learn more...").prependTo($("#resultsResume"));
 
-      var activitiesObj = data.data.map(
+      var activitiesObj = data[0].data.map(
         (arrActivities) => arrActivities.activities
       );
       console.log(activitiesObj);
-      var topicsObj = data.data.map((arrTopics) => arrTopics.topics);
+      var topicsObj = data[0].data.map((arrTopics) => arrTopics.topics);
       console.log(topicsObj);
       var parkByActivities = [];
       var parkByTheme = [];
@@ -344,7 +178,7 @@ $(document).ready(function () {
         for (var y of x) {
           if (y.name == userInputActivities) {
             filteringActivities = true;
-            parkByActivities.push(data.data[activitiesObj.indexOf(x)]);
+            parkByActivities.push(data[0].data[activitiesObj.indexOf(x)]);
           }
         }
       }
@@ -354,7 +188,7 @@ $(document).ready(function () {
         for (var y of x) {
           if (y.name == userInputTheme) {
             filteringTheme = true;
-            parkByTheme.push(data.data[topicsObj.indexOf(x)]);
+            parkByTheme.push(data[0].data[topicsObj.indexOf(x)]);
           }
         }
       }
@@ -444,7 +278,7 @@ $(document).ready(function () {
       window.location.href =
         "./details.html" + // saving object into the window location href with parameters of user's choices
         "?longitude=" +
-        longitude + // saving object into the window location href of user's stateName choice
+        longitude + // saving object into the window location href of user's stateCode choice
         "&latitude=" +
         latitude + // saving object into the window location href of user's activity choice
         "&parkCode=" +
